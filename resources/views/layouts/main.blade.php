@@ -11,14 +11,14 @@
 </head>
 <body>
 <div class="container">
-    <div class="row">
-        <div class="btn-group">
-            <a href="{{route('main.index')}}" class="btn btn-primary active" aria-current="page">Вход</a>
-            <a href="{{route('post.index')}}" class="btn btn-primary">Право</a>
-            <a href="{{route('about.index')}}" class="btn btn-primary">Прямо</a>
-            <a href="{{route('contacts.index')}}" class="btn btn-primary">Лево</a>
-        </div>
-    </div>
+{{--    <div class="row">--}}
+{{--        <div class="btn-group">--}}
+{{--            <a href="{{route('main.index')}}" class="btn btn-primary active" aria-current="page">Вход</a>--}}
+{{--            <a href="{{route('post.index')}}" class="btn btn-primary">Право</a>--}}
+{{--            <a href="{{route('about.index')}}" class="btn btn-primary">Прямо</a>--}}
+{{--            <a href="{{route('contacts.index')}}" class="btn btn-primary">Лево</a>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 @yield('content')
 </div>
 </body>
