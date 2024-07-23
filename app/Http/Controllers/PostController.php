@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
 
 class PostController extends Controller
 {
     public function index(): string
     {
-        $posts = Post::all();
-        return view('post.index', compact('posts'));
+
+        $category = Category::find(2);
+        $post = Post::find(2);
+        dd($post->category);
+
+        // return view('post.index', compact('posts'));
     }
 
     public function create()
@@ -50,12 +55,12 @@ class PostController extends Controller
         return redirect()->route('post.show', $post->id);
     }
 
-   /* public function delete()
-    {
-        $post = Post::find(2);
-        $post->delete();
-        dd('delete');
-    }*/
+    /* public function delete()
+     {
+         $post = Post::find(2);
+         $post->delete();
+         dd('delete');
+     }*/
     public function delete()
     {
         $post = Post::withTrashed()->find(2);
@@ -81,17 +86,18 @@ class PostController extends Controller
         ];
 
         $post = Post::firstOrCreate([
-                'title' => 'some post'
-            ],[
-                'title' => 'some post',
-                'content' => 'some content',
-                'image' => 'some imageblalba.jpg',
-                'likes' => 50000,
-                'is_published' => 1,
-            ]);
+            'title' => 'some post'
+        ], [
+            'title' => 'some post',
+            'content' => 'some content',
+            'image' => 'some imageblalba.jpg',
+            'likes' => 50000,
+            'is_published' => 1,
+        ]);
         dump($post->content);
         dd('end');
     }
+
     public function updateOrCreate()
     {
         $anotherPost = [
@@ -104,12 +110,12 @@ class PostController extends Controller
         $post = Post::updateOrCreate([
             'title' => 'some not post',
 
-        ],[
-                'title' => 'updateorcreate some post',
-                'content' => 'updateorcreate some content',
-                'image' => 'updateorcreate some imageblalba.jpg',
-                'likes' => 50000,
-                'is_published' => 1,
+        ], [
+            'title' => 'updateorcreate some post',
+            'content' => 'updateorcreate some content',
+            'image' => 'updateorcreate some imageblalba.jpg',
+            'likes' => 50000,
+            'is_published' => 1,
         ]);
         dd(222);
     }
