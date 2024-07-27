@@ -1,18 +1,15 @@
 <?php
 
 
-use App\Http\Controllers\AboutController;
-use App\Http\Controllers\ContactsController;
-use App\Http\Controllers\MainController;
-use App\Http\Controllers\Post\CreateController;
-use App\Http\Controllers\Post\DestroyController;
-use App\Http\Controllers\Post\EditController;
-use App\Http\Controllers\Post\IndexController;
-use App\Http\Controllers\Post\ShowController;
-use App\Http\Controllers\Post\StoreController;
-use App\Http\Controllers\Post\UpdateController;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\{AboutController, ContactsController, MainController, Post\IndexController, PostController};
+use App\Http\Controllers\Post\{CreateController,
+    DestroyController,
+    EditController,
+    ShowController,
+    StoreController,
+    UpdateController};
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -29,19 +26,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['namespace' => 'Post'], function (){
-    Route::get('/posts', [IndexController::class])->name('post.index');
-    Route::get('/posts/create', [CreateController::class])->name('post.create');
+Route::controller(PostController::class)->group(function () {
+    Route::get('/posts', 'index')->name('post.index');
+    Route::get('/posts/create', 'create')->name('post.create');
 
-    Route::post('/posts', [StoreController::class])->name('post.store');
-    Route::get('/posts/{post}', [ShowController::class])->name('post.show');
-    Route::get('/posts/{post}/edit', [EditController::class])->name('post.edit');
-    Route::patch('/posts/{post}', [UpdateController::class])->name('post.update');
-    Route::delete('/posts/{post}', [DestroyController::class])->name('post.delete');
+    Route::post('/posts', 'store')->name('post.store');
+    Route::get('/posts/{post}', 'show')->name('post.show');
+    Route::get('/posts/{post}/edit', 'edit')->name('post.edit');
+    Route::patch('/posts/{post}', 'update')->name('post.update');
+    Route::delete('/posts/{post}', 'destroy')->name('post.delete');
 });
-
-
-
 
 Route::get('/posts/update', [PostController::class, 'update']);
 Route::get('/posts/delete', [PostController::class, 'delete']);

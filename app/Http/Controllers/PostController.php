@@ -58,15 +58,16 @@ class PostController extends Controller
             'title' => 'string',
             'content' => 'string',
             'image' => 'string',
-            'category_id' => '',
-            'tags' => '',
-
+            'category_id' => 'integer|nullable',
+            'tags' => 'array|nullable', // предполагаем, что tags это массив
         ]);
-        $tags = $data['tags'];
+
+        $tags = $data['tags'] ?? [];
         unset($data['tags']);
 
         $post->update($data);
         $post->tags()->sync($tags);
+
         return redirect()->route('post.show', $post->id);
     }
 
@@ -76,12 +77,12 @@ class PostController extends Controller
          $post->delete();
          dd('delete');
      }*/
-    public function delete()
-    {
-        $post = Post::withTrashed()->find(2);
-        $post->restore();
-        dd('delete');
-    }
+//    public function delete()
+//    {
+//        $post = Post::withTrashed()->find(2);
+//        $post->restore();
+//        dd('delete');
+//    }
 
     public function destroy(Post $post)
     {
