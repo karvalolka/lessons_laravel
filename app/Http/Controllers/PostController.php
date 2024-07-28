@@ -2,17 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Post\FilterRequest;
+use App\Http\Requests\Post\StoreRequest;
+use App\Http\Requests\Post\UpdateRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 
-class PostController extends Controller
+class PostController extends BaseController
 {
-    public function index(): string
+    public function index(FilterRequest $request): string
     {
+        $data = $request->validated();
+        $query = Post::query();
 
-        $posts = Post::all();
-        return view('post.index', compact('posts'));
+        if (isset($data['category_id'])){
+            $query->where('category_id', $data['category_id']);
+        }
+        if (isset($data['title'])){
+            $query->where('title', 'like', "%{$data['title']}%");
+        }
+        if (isset($data['content'])){
+            $query->where('content', 'like', $data['content']);
+        }
+
+        $posts = $query->get();
+        dd($posts);
+
+        //$posts = Post::paginate(10);
+        //return view('post.index', compact('posts'));
     }
 
     public function create()
@@ -22,19 +40,11 @@ class PostController extends Controller
         return view('post.create', compact('categories', 'tags'));
     }
 
-    public function store()
+    public function store(StoreRequest $request)
     {
-        $data = request()->validate([
-            'title' => 'required|string',
-            'content' => 'required|string',
-            'image' => 'required|string',
-            'category_id' => '',
-            'tags' => '',
-        ]);
-        $tags = $data['tags'];
-        unset($data['tags']);
-        $post = Post::create($data);
-        $post->tags()->attach($tags);
+        $data = $request->validated();
+
+        $this->service->store($data);
 
         return redirect()->route('post.index');
     }
@@ -52,37 +62,14 @@ class PostController extends Controller
 
     }
 
-    public function update(Post $post)
+    public function update(UpdateRequest $request, Post $post)
     {
-        $data = request()->validate([
-            'title' => 'string',
-            'content' => 'string',
-            'image' => 'string',
-            'category_id' => 'integer|nullable',
-            'tags' => 'array|nullable', // предполагаем, что tags это массив
-        ]);
+        $data = $request->validated();
 
-        $tags = $data['tags'] ?? [];
-        unset($data['tags']);
-
-        $post->update($data);
-        $post->tags()->sync($tags);
+        $this->service->update($post, $data);
 
         return redirect()->route('post.show', $post->id);
     }
-
-    /* public function delete()
-     {
-         $post = Post::find(2);
-         $post->delete();
-         dd('delete');
-     }*/
-//    public function delete()
-//    {
-//        $post = Post::withTrashed()->find(2);
-//        $post->restore();
-//        dd('delete');
-//    }
 
     public function destroy(Post $post)
     {
