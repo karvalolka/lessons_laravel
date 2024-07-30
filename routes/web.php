@@ -1,7 +1,11 @@
 <?php
 
 
-use App\Http\Controllers\{AboutController, ContactsController, MainController, Post\IndexController, PostController};
+use App\Http\Controllers\{AboutController,
+    Admin\Post\PostController,
+    ContactsController,
+    MainController,
+    Post\IndexController};
 use App\Http\Controllers\Post\{CreateController,
     DestroyController,
     EditController,
@@ -35,6 +39,10 @@ Route::controller(PostController::class)->group(function () {
     Route::get('/posts/{post}/edit', 'edit')->name('post.edit');
     Route::patch('/posts/{post}', 'update')->name('post.update');
     Route::delete('/posts/{post}', 'destroy')->name('post.delete');
+});
+
+Route::prefix('admin')->group(function () {
+    Route::get('/post', [PostController::class, 'index'])->name('admin.post.index');
 });
 
 Route::get('/posts/update', [PostController::class, 'update']);
