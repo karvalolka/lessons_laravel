@@ -6,7 +6,7 @@
                 <i class="nav-icon fas fa-sharp-duotone fa-solid fa-list"></i>
                 <p>
                     Posts
-                    <span class="badge badge-info right">{{$posts->total()}}</span>
+                    <span class="badge badge-info right">{{$posts->count()}}</span>
                 </p>
             </a>
         </li>

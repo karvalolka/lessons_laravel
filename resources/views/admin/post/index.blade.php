@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-
 @section('content')
     <div>
         <div>
@@ -9,7 +8,6 @@
             <div><a class="btn btn-outline-secondary mt-3" href="{{route('post.show', $post->id)}}">{{$post->id}}
                     . {{$post->title}}</a></div>
         @endforeach
-
         <div class="mt-3">
             {{$posts->withQueryString()->links()}}
         </div>

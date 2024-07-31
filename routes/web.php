@@ -4,14 +4,8 @@
 use App\Http\Controllers\{AboutController,
     Admin\Post\PostController,
     ContactsController,
-    MainController,
-    Post\IndexController};
-use App\Http\Controllers\Post\{CreateController,
-    DestroyController,
-    EditController,
-    ShowController,
-    StoreController,
-    UpdateController};
+    MainController};
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
@@ -41,8 +35,15 @@ Route::controller(PostController::class)->group(function () {
     Route::delete('/posts/{post}', 'destroy')->name('post.delete');
 });
 
-Route::prefix('admin')->group(function () {
-    Route::get('/post', [PostController::class, 'index'])->name('admin.post.index');
+Route::prefix('admin')->controller(PostController::class)->group(function () {
+    Route::get('/post', 'index')->name('admin.post.index');
+    Route::get('/postы/create', 'create')->name('admin.post.create');
+
+    Route::post('/posts', 'store')->name('admin.post.store');
+    Route::get('/posts/{post}', 'show')->name('admin.post.show');
+    Route::get('/posts/{post}/edit', 'edit')->name('admin.post.edit');
+    Route::patch('/posts/{post}', 'update')->name('admin.post.update');
+    Route::delete('/posts/{post}', 'destroy')->name('admin.post.delete');
 });
 
 Route::get('/posts/update', [PostController::class, 'update']);
@@ -59,3 +60,7 @@ Route::get('/about', [AboutController::class, 'index'])->name('about.index');
 
 
 
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

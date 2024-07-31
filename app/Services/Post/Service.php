@@ -8,7 +8,12 @@ class Service
 {
     public function store($data)
     {
-        $tags = $data['tags'];
+        if (isset($data['tags'])) {
+            $tags = $data['tags'];
+            unset($data['tags']);
+        } else {
+            $tags = $data['tags'] ?? [];
+        }
         unset($data['tags']);
         $post = Post::create($data);
 

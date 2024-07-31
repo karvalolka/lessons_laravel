@@ -15,7 +15,7 @@ class Post extends Model
         'title',
         'content',
         'image',
-        'category_id'
+        'category_id',
     ];
 
     public function category()

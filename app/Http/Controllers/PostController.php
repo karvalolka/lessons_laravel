@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Post;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Filters\PostFilter;
@@ -10,31 +10,23 @@ use App\Http\Requests\Post\UpdateRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
-use App\Services\Post\Service;
 
 class PostController extends Controller
 {
-    protected $service;
-
-    public function __construct(Service $service)
-    {
-        $this->service = $service;
-    }
     public function index(FilterRequest $request): string
     {
         $data = $request->validated();
         $filter = app()->make(PostFilter::class, ['queryParams' => array_filter($data)]);
         $posts = Post::filter($filter)->paginate(10);
 
-        return view('admin.post.index', compact('posts'));
+        return view('post.index', compact('posts'));
     }
 
     public function create()
     {
         $categories = Category::all();
         $tags = Tag::all();
-        $posts = Post::all();
-        return view('admin.post.create', compact('categories', 'tags', 'posts'));
+        return view('post.create', compact('categories', 'tags'));
     }
 
     public function store(StoreRequest $request)
@@ -43,21 +35,19 @@ class PostController extends Controller
 
         $this->service->store($data);
 
-        return redirect()->route('admin.post.index');
+        return redirect()->route('post.index');
     }
 
     public function show(Post $post)
     {
-        $posts = Post::all();
-        return view('admin.post.show', compact('post', 'posts'));
+        return view('post.show', compact('post'));
     }
 
     public function edit(Post $post)
     {
         $categories = Category::all();
         $tags = Tag::all();
-        $posts = Post::all();
-        return view('admin.post.edit', compact('post', 'categories', 'tags', 'posts'));
+        return view('post.edit', compact('post', 'categories', 'tags'));
 
     }
 
@@ -67,12 +57,12 @@ class PostController extends Controller
 
         $this->service->update($post, $data);
 
-        return redirect()->route('admin.post.show', $post->id);
+        return redirect()->route('post.show', $post->id);
     }
 
     public function destroy(Post $post)
     {
         $post->delete();
-        return redirect()->route('admin.post.index');
+        return redirect()->route('post.index');
     }
 }
