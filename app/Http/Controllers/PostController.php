@@ -10,9 +10,11 @@ use App\Http\Requests\Post\UpdateRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+
     public function index(FilterRequest $request): string
     {
         $data = $request->validated();
@@ -65,4 +67,5 @@ class PostController extends Controller
         $post->delete();
         return redirect()->route('post.index');
     }
+
 }

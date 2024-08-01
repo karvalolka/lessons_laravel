@@ -4,6 +4,7 @@
 use App\Http\Controllers\{AboutController,
     Admin\Post\PostController,
     ContactsController,
+    HomeController,
     MainController};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -20,9 +21,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
 
 Route::controller(PostController::class)->group(function () {
     Route::get('/posts', 'index')->name('post.index');
@@ -35,9 +35,9 @@ Route::controller(PostController::class)->group(function () {
     Route::delete('/posts/{post}', 'destroy')->name('post.delete');
 });
 
-Route::prefix('admin')->controller(PostController::class)->group(function () {
-    Route::get('/post', 'index')->name('admin.post.index');
-    Route::get('/postы/create', 'create')->name('admin.post.create');
+Route::prefix('admin')->middleware('admin')->controller(PostController::class)->group(function () {
+    Route::get('/posts', 'index')->name('admin.post.index');
+    Route::get('/posts/create', 'create')->name('admin.post.create');
 
     Route::post('/posts', 'store')->name('admin.post.store');
     Route::get('/posts/{post}', 'show')->name('admin.post.show');
