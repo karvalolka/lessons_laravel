@@ -18,6 +18,11 @@
                 </div>
             </div>
         </div>
+        <div>
+            <li class="nav-item d-none d-sm-inline-block ">
+                <a href="{{route('post.index')}}" class="nav-link align='center'" >На главную</a>
+            </li>
+        </div>
     </div>
 </div>
 @endsection

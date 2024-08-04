@@ -6,6 +6,7 @@ use App\Http\Filters\PostFilter;
 use App\Http\Requests\Post\FilterRequest;
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\UpdateRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
@@ -13,7 +14,7 @@ use App\Models\Tag;
 class PostController extends Controller
 {
 
-    public function index(FilterRequest $request): string
+    public function index(FilterRequest $request)
     {
         $data = $request->validated();
         $filter = app()->make(PostFilter::class, ['queryParams' => array_filter($data)]);
@@ -31,10 +32,10 @@ class PostController extends Controller
 
     public function store(StoreRequest $request)
     {
+
         $data = $request->validated();
 
         $this->service->store($data);
-
         return redirect()->route('post.index');
     }
 

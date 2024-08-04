@@ -7,10 +7,12 @@ use App\Http\Filters\PostFilter;
 use App\Http\Requests\Post\FilterRequest;
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\UpdateRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Services\Post\Service;
+use \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class PostController extends Controller
 {
@@ -20,13 +22,20 @@ class PostController extends Controller
     {
         $this->service = $service;
     }
-    public function index(FilterRequest $request): string
-    {
-        $data = $request->validated();
-        $filter = app()->make(PostFilter::class, ['queryParams' => array_filter($data)]);
-        $posts = Post::filter($filter)->paginate(10);
 
-        return view('admin.post.index', compact('posts'));
+    public function index(FilterRequest $request)
+    {
+
+        $data = $request->validated();
+
+        $page = $data['page'] ?? 1;
+        $perPage = $data['per_page'] ?? 10;
+
+        $filter = app()->make(PostFilter::class, ['queryParams' => array_filter($data)]);
+        $posts = Post::filter($filter)->paginate($perPage, ['*'], 'page', $page);
+
+        return PostResource::collection($posts);
+        //return view('admin.post.index', compact('posts'));
     }
 
     public function create()
@@ -39,11 +48,14 @@ class PostController extends Controller
 
     public function store(StoreRequest $request)
     {
+
         $data = $request->validated();
 
-        $this->service->store($data);
+        $post = $this->service->store($data);
 
-        return redirect()->route('admin.post.index');
+        return new PostResource($post);
+
+        //return redirect()->route('admin.post.index');
     }
 
     public function show(Post $post)
@@ -65,9 +77,10 @@ class PostController extends Controller
     {
         $data = $request->validated();
 
-        $this->service->update($post, $data);
+        $post = $this->service->update($post, $data);
+        return new PostResource($post);
 
-        return redirect()->route('admin.post.show', $post->id);
+        //return redirect()->route('admin.post.show', $post->id);
     }
 
     public function destroy(Post $post)

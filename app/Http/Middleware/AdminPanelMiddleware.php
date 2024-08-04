@@ -12,13 +12,16 @@ class AdminPanelMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()->role !== 'admin'){
+        $user = auth()->user();
+
+        if (!$user || $user->role !== 'admin') {
             return redirect()->route('home');
         }
-            return $next($request);
+
+        return $next($request);
     }
 }
