@@ -27,7 +27,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::controller(PostController::class)->group(function () {
     Route::get('/posts', 'index')->name('post.index');
     Route::get('/posts/create', 'create')->name('post.create');
-
     Route::post('/posts', 'store')->name('post.store');
     Route::get('/posts/{post}', 'show')->name('post.show');
     Route::get('/posts/{post}/edit', 'edit')->name('post.edit');
@@ -38,7 +37,6 @@ Route::controller(PostController::class)->group(function () {
 Route::prefix('admin')->middleware('admin')->controller(PostController::class)->group(function () {
     Route::get('/posts', 'index')->name('admin.post.index');
     Route::get('/posts/create', 'create')->name('admin.post.create');
-
     Route::post('/posts', 'store')->name('admin.post.store');
     Route::get('/posts/{post}', 'show')->name('admin.post.show');
     Route::get('/posts/{post}/edit', 'edit')->name('admin.post.edit');
